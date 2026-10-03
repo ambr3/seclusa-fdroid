@@ -1,0 +1,135 @@
+name: Deploy F-Droid repo to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '17 6 * * 1'
+  repository_dispatch:
+    types: [fdroid-update]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Android SDK cmdline tools
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools build-tools;34.0.0'
+
+      - name: Install fdroidserver
+        run: |
+          python -m pip install -U pip "setuptools<81" fdroidserver
+          fdroid --version
+          SDK="${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
+          BT=$(ls -d "$SDK"/build-tools/* 2>/dev/null | sort -V | tail -1)
+          echo "ANDROID_HOME=$SDK" >> "$GITHUB_ENV"
+          echo "$BT" >> "$GITHUB_PATH"
+          echo "Using build-tools: $BT"
+          command -v aapt || ls "$BT"/aapt*
+          command -v apksigner || ls "$BT"/apksigner*
+
+      - name: Write keystore from secrets
+        env:
+          FDROID_KEYSTORE_BASE64: ${{ secrets.FDROID_KEYSTORE_BASE64 }}
+        run: |
+          test -n "$FDROID_KEYSTORE_BASE64"
+          mkdir -p "$HOME/fdroid-secrets"
+          echo "$FDROID_KEYSTORE_BASE64" | base64 -d > "$HOME/fdroid-secrets/seclusa-fdroid.jks"
+          chmod 600 "$HOME/fdroid-secrets/seclusa-fdroid.jks"
+
+      - name: Write fdroid config.yml
+        env:
+          FDROID_KEYSTORE_PASS: ${{ secrets.FDROID_KEYSTORE_PASS }}
+          FDROID_KEY_PASS: ${{ secrets.FDROID_KEY_PASS }}
+          FDROID_KEY_ALIAS: ${{ secrets.FDROID_KEY_ALIAS }}
+        run: |
+          # Prefer HOME path used by write step
+          export FDROID_KEYSTORE="$HOME/fdroid-secrets/seclusa-fdroid.jks"
+          python3 scripts/write-fdroid-config.py
+          # Repo icon for index
+          mkdir -p fdroid/repo/icons
+          if [ -f repo-icon.png ]; then
+            cp repo-icon.png fdroid/repo/icons/icon.png
+          fi
+
+      - name: Download latest Solitaire APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p fdroid/repo
+          gh release download -R ambr3/Seclusa-Solitaire \
+            --pattern '*.apk' \
+            --dir fdroid/repo \
+            --clobber
+          ls -la fdroid/repo/*.apk
+
+      - name: Copy metadata
+        run: |
+          mkdir -p fdroid/metadata
+          cp -a metadata/. fdroid/metadata/
+          ls -la fdroid/metadata/
+
+      - name: fdroid update
+        working-directory: fdroid
+        run: fdroid update -c --pretty -v
+
+      - name: Compute fingerprint and build _site
+        env:
+          FDROID_KEYSTORE_PASS: ${{ secrets.FDROID_KEYSTORE_PASS }}
+          FDROID_KEY_ALIAS: ${{ secrets.FDROID_KEY_ALIAS }}
+        run: |
+          ALIAS="${FDROID_KEY_ALIAS:-seclusafdroid}"
+          FP=$(keytool -exportcert -alias "$ALIAS" \
+            -keystore "$HOME/fdroid-secrets/seclusa-fdroid.jks" \
+            -storepass "$FDROID_KEYSTORE_PASS" \
+            | openssl sha256 -r | awk '{print tolower($1)}')
+          echo "Fingerprint: $FP"
+
+          rm -rf _site
+          mkdir -p _site/fdroid
+          sed "s/{{FDROID_FINGERPRINT}}/${FP}/g" index.html > _site/index.html
+          cp -a fdroid/repo _site/fdroid/repo
+
+          # NEVER ship secrets to Pages
+          find _site -name 'config.yml' -delete
+          find _site -name '*.jks' -delete
+          find _site -name 'keystore*' -delete
+
+          test -f _site/fdroid/repo/index-v1.jar || test -f _site/fdroid/repo/entry.jar
+          ls -la _site/fdroid/repo/ | head -40
+          grep -q "$FP" _site/index.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
