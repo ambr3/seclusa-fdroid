@@ -29,7 +29,7 @@ repo_description: |-
   Personal F-Droid repository for Seclusa apps by ambr3.
   Privacy-first, offline-friendly Android apps.
 archive_older: 0
-repo_icon: icons/icon.png
+repo_icon: icon.png
 repo_keyalias: {alias}
 keystore: {keystore}
 keystorepass: {sq(store_pass)}
