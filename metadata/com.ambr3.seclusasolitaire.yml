@@ -1,0 +1,27 @@
+Categories:
+  - Games
+License: GPL-3.0-or-later
+AuthorName: ambr3
+WebSite: https://github.com/ambr3/Seclusa-Solitaire
+SourceCode: https://github.com/ambr3/Seclusa-Solitaire
+IssueTracker: https://github.com/ambr3/Seclusa-Solitaire/issues
+Changelog: https://github.com/ambr3/Seclusa-Solitaire/blob/main/CHANGELOG.md
+
+AutoName: Seclusa Solitaire
+Name: Seclusa Solitaire
+
+Summary: A privacy-first solitaire collection with 19 games
+Description: |-
+  A privacy-first, fully offline solitaire collection for Android.
+  It requests zero permissions, makes no network requests, and runs
+  entirely on your device. No accounts, no ads, no tracking.
+
+  Games included: AcesUp, Calculation, Canfield, FortyEight, FreeCell,
+  Golf, Grandfather's Clock, Gypsy, Klondike, Maze, Mod3, Napoleon's Tomb,
+  Pyramid, Simple Simon, Spider, Spiderette, TriPeaks, Vegas and Yukon.
+
+  Customizable: 8 card themes, 10 card backgrounds and 6 background colors.
+  Features automatic saving, high scores, undo, hints, and tablet/landscape support.
+
+RepoType: git
+Repo: https://github.com/ambr3/Seclusa-Solitaire.git

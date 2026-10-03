@@ -1,0 +1,29 @@
+# Signing / secrets — never commit
+*.jks
+*.keystore
+keystore.properties
+keystore.password
+config.yml
+local.properties
+.env
+*.pem
+*.p12
+
+# Local fdroid working tree (APKs, generated index, config.yml)
+fdroid/
+
+# Generated site
+_site/
+*.apk
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+fdroidserver-env/
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
