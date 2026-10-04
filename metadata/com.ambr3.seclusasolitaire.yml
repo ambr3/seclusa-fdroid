@@ -5,23 +5,26 @@ AuthorName: ambr3
 WebSite: https://github.com/ambr3/Seclusa-Solitaire
 SourceCode: https://github.com/ambr3/Seclusa-Solitaire
 IssueTracker: https://github.com/ambr3/Seclusa-Solitaire/issues
-Changelog: https://github.com/ambr3/Seclusa-Solitaire/blob/main/CHANGELOG.md
+Changelog: https://github.com/ambr3/Seclusa-Solitaire/blob/master/CHANGELOG.md
 
 AutoName: Seclusa Solitaire
 Name: Seclusa Solitaire
 
-Summary: A privacy-first solitaire collection with 19 games
+Summary: Privacy-first offline solitaire — 18 games (fork)
 Description: |-
-  A privacy-first, fully offline solitaire collection for Android.
-  It requests zero permissions, makes no network requests, and runs
-  entirely on your device. No accounts, no ads, no tracking.
+  Seclusa Solitaire is a privacy-first fork of Tobias Bielefeld's
+  Simple Solitaire Collection (GPL), modernised for Material 3.
 
-  Games included: AcesUp, Calculation, Canfield, FortyEight, FreeCell,
-  Golf, Grandfather's Clock, Gypsy, Klondike, Maze, Mod3, Napoleon's Tomb,
-  Pyramid, Simple Simon, Spider, Spiderette, TriPeaks, Vegas and Yukon.
+  Fully offline: zero permissions, no network, no accounts, no ads,
+  no tracking. Game state stays on your device.
 
-  Customizable: 8 card themes, 10 card backgrounds and 6 background colors.
-  Features automatic saving, high scores, undo, hints, and tablet/landscape support.
+  Eighteen games: Aces Up, Calculation, Canfield, Forty & Eight,
+  FreeCell, Golf, Grandfather's Clock, Gypsy, Klondike, Maze, Mod3,
+  Napoleon's Tomb, Pyramid, Simple Simon, Spider, Spiderette,
+  TriPeaks and Yukon.
+
+  Customizable: 10 card themes, 10 card backgrounds and 6 playfield
+  colours. Auto-save, high scores, undo, hints, landscape and tablet.
 
 RepoType: git
 Repo: https://github.com/ambr3/Seclusa-Solitaire.git
