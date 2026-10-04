@@ -12,3 +12,4 @@ All notable changes to **seclusa-fdroid**.
 ### Changed
 - Solitaire metadata: 18 games (Vegas removed), note that it is a GPL fork
 - Repo icon: Seclusa website PWA icon (not the game icon)
+- Shortened README to match Seclusa Solitaire style
