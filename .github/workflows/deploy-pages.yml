@@ -65,11 +65,13 @@ jobs:
           # Prefer HOME path used by write step
           export FDROID_KEYSTORE="$HOME/fdroid-secrets/seclusa-fdroid.jks"
           python3 scripts/write-fdroid-config.py
-          # Repo icon for index
+          # fdroidserver reads repo_icon from fdroid/icon.png (config: repo_icon: icon.png)
+          test -f repo-icon.png
+          cp repo-icon.png fdroid/icon.png
           mkdir -p fdroid/repo/icons
-          if [ -f repo-icon.png ]; then
-            cp repo-icon.png fdroid/repo/icons/icon.png
-          fi
+          cp repo-icon.png fdroid/repo/icons/icon.png
+          cp repo-icon.png fdroid/repo/index.png
+          file fdroid/icon.png
 
       - name: Download latest Solitaire APK
         env:
@@ -91,6 +93,18 @@ jobs:
       - name: fdroid update
         working-directory: fdroid
         run: fdroid update -c --pretty -v
+
+      - name: Ensure repo icon is Seclusa mark
+        run: |
+          # fdroid update can leave a QR/placeholder — force Seclusa mark into published tree
+          test -f repo-icon.png
+          mkdir -p fdroid/repo/icons
+          cp repo-icon.png fdroid/icon.png
+          cp repo-icon.png fdroid/repo/icons/icon.png
+          cp repo-icon.png fdroid/repo/index.png
+          file fdroid/repo/icons/icon.png
+          # Fail if we still have the 1-bit QR placeholder
+          ! file fdroid/repo/icons/icon.png | grep -q '1-bit'
 
       - name: Compute fingerprint and build _site
         env:

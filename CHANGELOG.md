@@ -4,6 +4,9 @@ All notable changes to **seclusa-fdroid**.
 
 ## Unreleased
 
+### Fixed
+- F-Droid Pages deploy was still publishing the QR placeholder; force Seclusa pixel-S into `icon.png` after `fdroid update`
+
 ### Changed
 - Repo icon: Seclusa pixel-S brand mark (replaces previous icon)
 
