@@ -4,6 +4,9 @@ All notable changes to **seclusa-fdroid**.
 
 ## Unreleased
 
+### Changed
+- Repo icon: Seclusa pixel-S brand mark (replaces previous icon)
+
 ### Added
 - Personal F-Droid binary repository for Seclusa apps
 - Seclusa Solitaire (`com.ambr3.seclusasolitaire`) from GitHub Releases
