@@ -4,6 +4,9 @@ All notable changes to **seclusa-fdroid**.
 
 ## Unreleased
 
+### Changed
+- Solitaire 4.3.5 published via GitHub Releases (MobSF 96/A)
+
 ### Fixed
 - F-Droid Pages deploy was still publishing the QR placeholder; force Seclusa pixel-S into `icon.png` after `fdroid update`
 
